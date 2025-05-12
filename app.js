@@ -9,15 +9,9 @@ async function connectDB() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-<<<<<<< HEAD
     console.log('MongoDB connected successfully');
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);
-=======
-    console.log('✅ MongoDB connected successfully');
-  } catch (error) {
-    console.error('❌ MongoDB connection failed:', error.message);
->>>>>>> c8e0ad15cc5a966f3cdb9bf9c763a5567bbc73bb
     process.exit(1);
   }
 }

@@ -1,17 +1,31 @@
-// Load HTTP module
-const http = require("http");
-const hostname = "127.0.0.1";
+const express = require("express");
+const { MongoClient } = require("mongodb");
+
+const app = express();
 const port = 3000;
 
-// Create HTTP server and listen on port 3000 for requests
-const server = http.createServer((req, res) => {
-  // Set the response HTTP header with HTTP status and Content type
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello World\n");
+// Thay bằng thông tin kết nối thực tế của bạn
+const uri = "mongodb+srv://sukemcachua:helloworld@medicaltreatment.czyxf0h.mongodb.net/?retryWrites=true&w=majority&appName=MedicalTreatment";
+
+const client = new MongoClient(uri);
+
+// API: GET /users - Trả về danh sách User
+app.get("/users", async (req, res) => {
+    try {
+        await client.connect();
+        const database = client.db("Medical_Treatment");
+        const users = database.collection("User");
+
+        const result = await users.find().toArray();
+        res.json(result);
+    } catch (err) {
+        console.error("Lỗi khi lấy users:", err);
+        res.status(500).json({ error: "Lỗi server" });
+    } finally {
+        await client.close();
+    }
 });
 
-// Listen for request on port 3000, and as a callback function have the port listened on logged
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+    console.log(`Server đang chạy tại http://localhost:${port}`);
 });
